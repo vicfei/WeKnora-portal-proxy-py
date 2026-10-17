@@ -1,0 +1,24 @@
+{% include "_begin.html" %}{% include "_topnav.html" %}
+<main class="container">
+<div class="chat-wrap">
+  <aside class="card side">
+    <h3>会话</h3>
+    <button class="primary wide" onclick="newSession()">＋ 新会话</button>
+    <ul id="sesslist">
+      {% for it1 in Sessions %}<li><a href="javascript:void(0)" onclick="loadSession('{{it1.ID}}')">{% if it1.Title %}{{it1.Title}}{% else %}{{it1.ID}}{% endif %}</a></li>
+      {% else %}<li class="muted">（暂无）</li>{% endfor %}
+    </ul>
+  </aside>
+  <section class="card chat-main">
+    <div class="row">
+      <span>引用知识库：</span>
+      {% for it2 in KBs %}<label class="chip"><input type="checkbox" value="{{it2.ID}}" class="kbchk"> {{it2.Name}}</label>{% endfor %}
+    </div>
+    <div id="messages" class="messages"><div class="muted centered">选择/新建会话后提问（回答流式呈现，含引用）</div></div>
+    <div class="row">
+      <input id="chatq" placeholder="输入问题，回车发送…" style="flex:1" onkeydown="if(event.key==='Enter')sendChat()">
+      <button class="primary" onclick="sendChat()">发送</button>
+    </div>
+  </section>
+</div>
+</main>{% include "_end.html" %}

@@ -1,0 +1,24 @@
+{% include "_begin.html" %}{% include "_topnav.html" %}
+<main class="container">
+<h2>{{KB.Name}}</h2>
+<div class="muted">{% if KB.Description %}{{KB.Description}} · {% endif %}{{KB.KnowledgeCount}} 篇文档 · 我的权限：{{Permission}}</div>
+<div class="card">
+  <div class="row">
+    <input id="q" placeholder="检索本知识库…" style="flex:1">
+    <button class="primary" onclick="doSearch('{{KB.ID}}')">检索</button>
+    {% if CanEdit %}
+    <input type="file" id="upfile" accept=".pdf,.docx,.txt,.md">
+    <button type="button" onclick="doUpload('{{KB.ID}}')">上传文档</button>
+    <span id="upmsg" class="muted"></span>{% endif %}
+  </div>
+</div>
+<div id="results"></div>
+<div class="card">
+  <h3>文档列表</h3>
+  <table>
+    <tr><th>标题</th><th>类型</th><th>解析状态</th></tr>
+    {% for it1 in Docs %}<tr><td>{{it1.Title}}</td><td>{{it1.Type}}</td><td class="{{it1.ParseStatus}}">{{it1.ParseStatus}}</td></tr>
+    {% else %}<tr><td colspan="3" class="muted">（空）</td></tr>{% endfor %}
+  </table>
+</div>
+</main>{% include "_end.html" %}

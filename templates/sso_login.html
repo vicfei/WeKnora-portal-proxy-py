@@ -1,0 +1,14 @@
+{% include "_begin.html" %}{% include "_topnav.html" %}
+<main class="container">
+<div class="card sso-card">
+  <h2>统一认证（SSO 模拟）</h2>
+  <p class="muted">模拟企业单点登录 · POC 环境</p>
+  {% if Error %}<div class="alert">{{Error}}</div>{% endif %}
+  <form method="post" action="/sso/authorize">
+    <input type="hidden" name="redirect_uri" value="{{RedirectURI}}">
+    <label>员工工号<input name="uum_user_id" autofocus placeholder="REVIEW-U0001"></label>
+    <label>密码<input name="password" type="password" placeholder="review123456"></label>
+    <button class="primary" type="submit">单点登录</button>
+  </form>
+</div>
+</main>{% include "_end.html" %}

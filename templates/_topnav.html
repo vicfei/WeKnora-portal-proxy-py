@@ -1,0 +1,10 @@
+<nav class="nav">
+  <a class="brand" href="/">WeKnora 门户</a>
+  {% if User %}<a href="/">知识库</a>
+  <a href="/chat">问答</a>
+  {% if User.IsAdmin %}<a href="/admin">管理后台</a>{% endif %}
+  <span class="spacer"></span>
+  <span class="who">{{User.DisplayName}}（{{User.UUMUserID}}）{% if User.IsAdmin %} · 管理员{% endif %}</span>
+  <form method="post" action="/logout" class="inline"><button class="link">退出</button></form>
+  {% else %}<span class="spacer"></span><span class="who">未登录</span>{% endif %}
+</nav>

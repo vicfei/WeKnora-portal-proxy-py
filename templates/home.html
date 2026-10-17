@@ -1,0 +1,19 @@
+{% include "_begin.html" %}{% include "_topnav.html" %}
+<main class="container">
+<h2>知识库</h2>
+{% if not Groups %}<div class="card muted">暂无授权的知识库——请联系管理员在管理后台授权。</div>{% endif %}
+{% for it1 in Groups %}
+<section class="group">
+  <h3>{{it1.Category}}<span class="count">{{it1.KBs|length}}</span></h3>
+  <div class="grid">
+  {% for it2 in it1.KBs %}
+    <a class="card kb" href="/kb/{{it2.ID}}">
+      <div class="kb-name">{{it2.Name}}</div>
+      <div class="kb-desc">{{it2.Description}}</div>
+      <div class="kb-meta">{{it2.KnowledgeCount}} 篇文档 · {% if it2.Permission == "editor" %}可编辑{% else %}只读{% endif %}</div>
+    </a>
+  {% endfor %}
+  </div>
+</section>
+{% endfor %}
+</main>{% include "_end.html" %}

@@ -1,0 +1,50 @@
+{% include "_begin.html" %}{% include "_topnav.html" %}
+<main class="container">
+<h2>管理后台</h2>
+<div class="tabs">
+  <button class="tab active" data-tab="grant">授权管理</button>
+  <button class="tab" data-tab="overview">授权总览</button>
+  <button class="tab" data-tab="audit">审计</button>
+</div>
+
+<section id="tab-grant" class="card">
+  <h3>新建 / 更新授权</h3>
+  <div class="row">
+    <select id="g_user" style="min-width:170px">
+      {% for it1 in Employees %}<option value="{{it1.UUMUserID}}">{{it1.DisplayName}}（{{it1.UUMUserID}}）</option>{% endfor %}
+    </select>
+    <select id="g_kb" style="min-width:200px">
+      {% for it2 in AllKBs %}<option value="{{it2.ID}}">{{it2.Name}}</option>{% endfor %}
+    </select>
+    <select id="g_perm"><option value="viewer">viewer（只读）</option><option value="editor">editor（可编辑）</option></select>
+    <select id="g_cat"><option>团队</option><option>公共</option><option>个人</option></select>
+    <input id="g_days" type="number" placeholder="有效天数(空=永久)" style="width:140px">
+    <button class="primary" onclick="saveGrant()">保存授权</button>
+  </div>
+  <p class="muted">保存后立即生效，变更写入审计；员工与知识库列表实时拉取 WeKnora。</p>
+</section>
+
+<section id="tab-overview" class="card" hidden>
+  <h3>授权总览（{{GrantRows|length}} 条）</h3>
+  <input id="g_filter" placeholder="按工号过滤…" oninput="filterGrants(this.value)">
+  <table id="grant_table">
+    <tr><th>工号</th><th>知识库</th><th>权限</th><th>分组</th><th>状态</th><th>有效期至</th><th>操作</th></tr>
+    {% for it3 in GrantRows %}
+    <tr data-user="{{it3.UUMUserID}}">
+      <td>{{it3.UUMUserID}}</td><td>{{it3.KBName}}</td><td>{{it3.Permission}}</td><td>{{it3.Category}}</td>
+      <td>{% if it3.Expired %}<span class="st expired">已过期</span>{% elif it3.Status == "revoked" %}<span class="st revoked">已回收</span>{% else %}<span class="st active">生效中</span>{% endif %}</td>
+      <td>{% if it3.ValidUntil.Valid %}{{it3.ValidUntilFmt}}{% else %}永久{% endif %}</td>
+      <td>{% if it3.Status == "active" and not it3.Expired %}<button class="danger" onclick="revokeGrant({{it3.ID}})">回收</button>{% endif %}</td>
+    </tr>{% endfor %}
+  </table>
+</section>
+
+<section id="tab-audit" class="card" hidden>
+  <h3>审计日志（最近 100 条）</h3>
+  <table>
+    <tr><th>时间</th><th>操作人</th><th>动作</th><th>对象</th><th>详情</th></tr>
+    {% for it4 in AuditRows %}<tr><td>{{it4.CreatedAtFmt}}</td><td>{{it4.Actor}}</td><td>{{it4.Action}}</td><td>{{it4.Target}}</td><td class="mono">{{it4.Detail}}</td></tr>
+    {% else %}<tr><td colspan="5" class="muted">（空）</td></tr>{% endfor %}
+  </table>
+</section>
+</main>{% include "_end.html" %}
